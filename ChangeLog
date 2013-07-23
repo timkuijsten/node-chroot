@@ -1,3 +1,10 @@
+2013.07.23, Version 0.1.2
+
+* check real group id after dropping privileges
+
+* docs: use superuser instead of root to avoid confusion
+
+
 2013.07.22, Version 0.1.1
 
 * check if started as root

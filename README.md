@@ -1,6 +1,6 @@
 # chroot
 
-Small utility to chroot and change privileges.
+Chroot the current process and drop privileges.
 
 ## Usage
 
@@ -9,6 +9,7 @@ Small utility to chroot and change privileges.
     // change root to "/var/empty" and user to "nobody"
     try {
       chroot('/var/empty', 'nobody');
+      // this process now has a new root and runs as user nobody
     } catch(e) {
       console.log('changing root or user failed: ' + e.message);
       process.exit(1);
@@ -26,7 +27,7 @@ Small utility to chroot and change privileges.
 * group {String}  optional group name or id, defaults to the entry in /etc/groups of `user`
 
 ## Notes
-* environment variables and any open file descriptors are not touched
+* environment variables and open file descriptors are not cleared
 
 ## License
 

@@ -13,7 +13,7 @@ if (process.getuid() === 0) {
   assert.notStrictEqual(process.getgid(), 0);
   assert.equal(~process.getgroups().indexOf(0), false); // should not contain a root group
 } else {
-  assert.throws(function() { chroot('foo', 'nobody'); }, /must run as root to chroot/);
+  assert.throws(function() { chroot('foo', 'nobody'); }, /chroot must be called while running as root/);
 }
 
 console.log('ok');

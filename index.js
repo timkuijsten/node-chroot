@@ -1,14 +1,14 @@
 var posix = require('posix');
 
 /**
- * Change the root of the current process. A non-root user must be provided since
+ * Change the root of the current process. A non-superuser must be provided since
  * changing root without dropping privileges makes no sense from a security point
  * of view.
  *
  * @param {String} newroot  the path of the new root for this process.
  * @param {String} user  the user name or id to switch to after changing the root
  * @param {String} [group]  the group name or id to switch to after changing the
- *                          root, default to the gid of the user
+ *                          root, defaults to the groups the provided user is in
  * @throws if any operation fails
  */
 module.exports = function chroot(newroot, user, group) {
@@ -16,7 +16,7 @@ module.exports = function chroot(newroot, user, group) {
   if (!user) { throw new Error('provide user'); }
 
   if (process.getuid() !== 0 || posix.geteuid() !== 0) {
-    throw new Error('must run as root to chroot');
+    throw new Error('chroot must be called while running as root');
   }
 
   var pwd;
@@ -50,8 +50,12 @@ module.exports = function chroot(newroot, user, group) {
   try {
     posix.setreuid(-1, 0);
   } catch(e) {
-    // double check
-    if (process.getuid() !== 0 && posix.geteuid() !== 0 && !~process.getgroups().indexOf(0)) {
+    // double check real and effective ids of the user and group and supplemental groups
+    var ids = [process.getuid(), process.getgid(), posix.geteuid(), posix.getegid()];
+    Array.prototype.push.apply(ids, process.getgroups());
+
+    // if none of the ids is zero, privileges are successfully dropped 
+    if (!~ids.indexOf(0)) {
       // success
       return;
     }
