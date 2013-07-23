@@ -1,0 +1,27 @@
+{
+  "name": "chroot",
+  "version": "0.1.0",
+  "author": {
+    "name": "Tim Kuijsten",
+    "email": "tim@netsend.nl",
+    "url": "https://github.com/timkuijsten"
+  },
+  "license": "MIT",
+  "description": "Chroot the current process and drop privileges",
+  "keywords": [
+    "chroot",
+    "jail"
+  ],
+  "engines": {
+    "node": ">=0.10.x"
+  },
+  "main": "index.js",
+  "bugs": "https://github.com/timkuijsten/node-chroot/issues",
+  "dependencies": {
+    "posix": "1.0.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/timkuijsten/node-chroot.git"
+  }
+}
