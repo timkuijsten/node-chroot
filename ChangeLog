@@ -1,0 +1,10 @@
+2013.07.22, Version master
+
+* check if started as root
+
+* make sure restoring privilege to root fails
+
+
+2013.07.22, Version 0.1.0
+
+* initial release

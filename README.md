@@ -14,8 +14,6 @@ Small utility to chroot and change privileges.
       process.exit(1);
     }
 
-Note: make sure you run this code as root
-
 ## Installation
 
     $ npm install chroot
@@ -27,10 +25,8 @@ Note: make sure you run this code as root
 * user {String}  the user name or id to switch to after changing the root
 * group {String}  optional group name or id, defaults to the entry in /etc/groups of `user`
 
-## Todo
-* verify changing the user id is done right using this paper: http://www.cs.berkeley.edu/~daw/papers/setuid-usenix02.pdf
-* sanitize open file descriptors, waiting for https://github.com/melor/node-posix/issues/17
-* create chroot.test() to help create safe chroots by checking paths, permissions, open file descriptors and environment
+## Notes
+* environment variables and any open file descriptors are not touched
 
 ## License
 
