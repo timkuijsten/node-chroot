@@ -2,18 +2,25 @@
 
 Chroot the current process and drop privileges.
 
-## Usage
+## Example
 
+Bind a TCP server to a privileged port before dropping privileges.
+
+    var net = require('net');
     var chroot = require('chroot');
 
-    // change root to "/var/empty" and user to "nobody"
-    try {
-      chroot('/var/empty', 'nobody');
-      // this process now has a new root and runs as user nobody
-    } catch(e) {
-      console.log('changing root or user failed: ' + e.message);
-      process.exit(1);
-    }
+    var server = net.createServer();
+    server.listen(81, function(err) {
+      if (err) { throw err; }
+
+      try {
+        chroot('/var/empty', 'nobody');
+        process.stdout.write('changed root to "/var/empty" and user to "nobody"\n');
+      } catch(e) {
+        process.stderr.write('changing root or user failed: ' + JSON.stringify(e) + '\n');
+        process.exit(1);
+      }
+    });
 
 ## Installation
 
@@ -32,7 +39,3 @@ Chroot the current process and drop privileges.
 ## License
 
 MIT, see LICENSE
-
-## Bugs
-
-See <https://github.com/timkuijsten/node-chroot/issues>.
