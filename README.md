@@ -10,7 +10,7 @@ Bind a TCP server to a privileged port before dropping privileges.
     var chroot = require('chroot');
 
     var server = net.createServer();
-    server.listen(12345, function(err) {
+    server.listen(80, function(err) {
       if (err) { throw err; }
 
       try {
@@ -21,6 +21,9 @@ Bind a TCP server to a privileged port before dropping privileges.
         process.exit(1);
       }
     });
+
+Note: since all ports below 1024 are privileged, you have to run this code as user `root`
+otherwise you get error EACCES.
 
 ## Installation
 
