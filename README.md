@@ -10,14 +10,14 @@ Bind a TCP server to a privileged port before dropping privileges.
     var chroot = require('chroot');
 
     var server = net.createServer();
-    server.listen(81, function(err) {
+    server.listen(12345, function(err) {
       if (err) { throw err; }
 
       try {
         chroot('/var/empty', 'nobody');
-        process.stdout.write('changed root to "/var/empty" and user to "nobody"\n');
+        console.log('changed root to "/var/empty" and user to "nobody"');
       } catch(e) {
-        process.stderr.write('changing root or user failed: ' + JSON.stringify(e) + '\n');
+        console.error('changing root or user failed', e);
         process.exit(1);
       }
     });
