@@ -42,6 +42,7 @@ module.exports = function chroot(newroot, user, group) {
     throw new Error('changing root failed: ' + e.message);
   }
   process.chdir('/');
+  process.env["PWD"] = '/';
 
   process.setgid(group || pwd.gid);
   process.setuid(pwd.uid);
