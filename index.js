@@ -42,9 +42,10 @@ module.exports = function chroot(newroot, user, group) {
     throw new Error('changing root failed: ' + e.message);
   }
   process.chdir('/');
-  // env['PWD'] is not always set under some shell/OS
-  if (typeof process.env["PWD"] !== 'undefined') {
-    process.env["PWD"] = '/';
+
+  // PWD might be set in some environments and is part of POSIX
+  if (typeof process.env.PWD !== 'undefined') {
+    process.env.PWD = '/';
   }
 
   process.setgid(group || pwd.gid);

@@ -37,7 +37,7 @@ otherwise you get error EACCES.
 * group {String}  optional group name or id, defaults to the entry in /etc/groups of `user`
 
 ## Notes
-* environment variables and open file descriptors are not cleared
+* open file descriptors and environment variables (except for PWD) are not cleared
 
 ## License
 
