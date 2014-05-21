@@ -1,3 +1,8 @@
+2014.05.21, Version 0.1.7
+
+* reset PWD if it's set in the environment (mozbugbox)
+
+
 2013.10.09, Version 0.1.6
 
 * use privileged example
