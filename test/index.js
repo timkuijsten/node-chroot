@@ -12,6 +12,8 @@ if (process.getuid() === 0) {
   assert.notStrictEqual(process.getuid(), 0);
   assert.notStrictEqual(process.getgid(), 0);
   assert.equal(~process.getgroups().indexOf(0), false); // should not contain a root group
+  assert.equal(process.cwd(), '/');
+  assert.equal(process.env['PWD'], '/');
 } else {
   assert.throws(function() { chroot('foo', 'nobody'); }, /chroot must be called while running as root/);
 }
