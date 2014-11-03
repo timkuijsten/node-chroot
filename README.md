@@ -16,14 +16,13 @@ Bind a TCP server to a privileged port before dropping privileges.
       try {
         chroot('/var/empty', 'nobody');
         console.log('changed root to "/var/empty" and user to "nobody"');
-      } catch(e) {
-        console.error('changing root or user failed', e);
+      } catch(err) {
+        console.error('changing root or user failed', err);
         process.exit(1);
       }
     });
 
-Note: since all ports below 1024 are privileged, you have to run this code as user `root`
-otherwise you get error EACCES.
+Note: in order to change user the process must be started as a super-user.
 
 ## Installation
 
@@ -37,8 +36,36 @@ otherwise you get error EACCES.
 * group {String}  optional group name or id, defaults to the entry in /etc/groups of `user`
 
 ## Notes
-* open file descriptors and environment variables (except for PWD) are not cleared
+* open file descriptors are not closed and environment variables are not cleared
+  (except for PWD)
+* If using `fork` beware that Node < 0.11 does not close file descriptors in the
+  child. See https://github.com/joyent/node/issues/6905 and
+  https://medium.com/@fun_cuddles/opening-files-in-node-js-considered-harmful-d7de566d499f
+
+## Todo
+* check `newroot` for ownership and access rights up to the original root
+* examine other environmental leaks like argv and open file descriptors
+* consider the implicit use of child_process
 
 ## License
 
-MIT, see LICENSE
+MIT
+
+Copyright (c) 2014 Tim Kuijsten
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
