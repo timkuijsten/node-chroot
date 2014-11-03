@@ -33,9 +33,9 @@ Note: in order to change user the process must be started as a super-user.
 ### chroot(newroot, user, [group])
 * newroot {String}  the path of the new root for this process
 * user {String|Number}  the user name or id to switch to after changing the root
-                        path
+  path
 * group {String|Number}  the group name or id to switch to after changing the
-                         root, defaults to the groups the user is in
+  root, defaults to the groups the user is in
 
 Change the root of the current process. A non-superuser must be provided since
 changing root without dropping privileges makes no sense from a security point
