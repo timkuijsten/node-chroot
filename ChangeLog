@@ -1,3 +1,8 @@
+2014.11.03, Version 0.1.9
+
+* docs: fix formatting issue on npm
+
+
 2014.11.03, Version 0.1.8
 
 * stricter type checking of input parameters
