@@ -5,15 +5,27 @@ var posix = require('posix');
  * changing root without dropping privileges makes no sense from a security point
  * of view.
  *
- * @param {String} newroot  the path of the new root for this process.
- * @param {String} user  the user name or id to switch to after changing the root
- * @param {String} [group]  the group name or id to switch to after changing the
- *                          root, defaults to the groups the provided user is in
+ * @param {String} newroot  the path of the new root for this process
+ * @param {String|Number} user  the user name or id to switch to after changing the
+ *                              root path
+ * @param {String|Number} [group]  the group name or id to switch to after changing
+ *                                 the root, defaults to the groups the user is in
  * @throws if any operation fails
  */
 module.exports = function chroot(newroot, user, group) {
-  if (!newroot) { throw new Error('provide newroot'); }
-  if (!user) { throw new Error('provide user'); }
+  if (typeof newroot !== 'string') { throw new TypeError('newroot must be a string'); }
+  if (typeof user !== 'string' && typeof user !== 'number') { throw new TypeError('user must be a string or a number'); }
+  if (typeof group !== 'undefined') {
+    if (typeof group !== 'string' && typeof group !== 'number') { throw new TypeError('group must be a string or a number'); }
+  }
+
+  if (newroot.length < 1) { throw new Error('newroot must contain at least one character'); }
+  if (typeof user === 'string' && user.length < 1) { throw new Error('user must contain at least one character'); }
+
+  if (user === 'root' || user === 0) { throw new Error('new user can not be root or 0'); }
+  if (typeof group !== 'undefined') {
+    if (group === 'root' || group === 0) { throw new Error('new group can not be root or 0'); }
+  }
 
   if (process.getuid() !== 0 || posix.geteuid() !== 0) {
     throw new Error('chroot must be called while running as root');
@@ -22,7 +34,7 @@ module.exports = function chroot(newroot, user, group) {
   var pwd;
   try {
     pwd = posix.getpwnam(user);
-  } catch(e) {
+  } catch(err) {
     throw new Error('user not found: ' + user);
   }
 
@@ -32,14 +44,14 @@ module.exports = function chroot(newroot, user, group) {
     } else {
       process.setgroups([group]);
     }
-  } catch(e) {
-    throw new Error('changing groups failed: ' + e.message);
+  } catch(err) {
+    throw new Error('changing groups failed: ' + err.message);
   }
 
   try {
     posix.chroot(newroot);
-  } catch(e) {
-    throw new Error('changing root failed: ' + e.message);
+  } catch(err) {
+    throw new Error('changing root failed: ' + err.message);
   }
   process.chdir('/');
 
@@ -54,7 +66,7 @@ module.exports = function chroot(newroot, user, group) {
   // try to restore privileges
   try {
     posix.setreuid(-1, 0);
-  } catch(e) {
+  } catch(err) {
     // double check real and effective ids of the user and group and supplemental groups
     var ids = [process.getuid(), process.getgid(), posix.geteuid(), posix.getegid()];
     Array.prototype.push.apply(ids, process.getgroups());
@@ -79,4 +91,6 @@ module.exports = function chroot(newroot, user, group) {
  * http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/minimize-privileges.html
  * http://www.cs.berkeley.edu/~daw/papers/setuid-usenix02.pdf
  * http://www.lst.de/~okir/blackhats/node97.html
+ * https://medium.com/@fun_cuddles/opening-files-in-node-js-considered-harmful-d7de566d499f
+ * https://github.com/joyent/node/issues/6905
  */

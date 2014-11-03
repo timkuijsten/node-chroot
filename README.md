@@ -32,8 +32,14 @@ Note: in order to change user the process must be started as a super-user.
 
 ### chroot(newroot, user, [group])
 * newroot {String}  the path of the new root for this process
-* user {String}  the user name or id to switch to after changing the root
-* group {String}  optional group name or id, defaults to the entry in /etc/groups of `user`
+* user {String|Number}  the user name or id to switch to after changing the root
+                        path
+* group {String|Number}  the group name or id to switch to after changing the
+                         root, defaults to the groups the user is in
+
+Change the root of the current process. A non-superuser must be provided since
+changing root without dropping privileges makes no sense from a security point
+of view.
 
 ## Notes
 * open file descriptors are not closed and environment variables are not cleared
