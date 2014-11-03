@@ -1,3 +1,11 @@
+2014.11.03, Version 0.1.8
+
+* stricter type checking of input parameters
+* update README: add Todo, notes and license
+* add test/example.js
+* split test into priv.js and unpriv.js
+
+
 2014.05.21, Version 0.1.7
 
 * reset PWD if it's set in the environment (mozbugbox)
@@ -26,14 +34,12 @@
 2013.07.23, Version 0.1.2
 
 * check real group id after dropping privileges
-
 * docs: use superuser instead of root to avoid confusion
 
 
 2013.07.22, Version 0.1.1
 
 * check if started as root
-
 * make sure restoring privilege to root fails
 
 
