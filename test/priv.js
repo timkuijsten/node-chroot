@@ -21,6 +21,11 @@ var assert = require('assert');
 
 var chroot = require('../index');
 
+if (process.getuid() !== 0) {
+  console.error('run these privileged tests as user root');
+  process.exit(1);
+}
+
 // ensure pwd
 process.env.PWD = '/var/empty';
 
