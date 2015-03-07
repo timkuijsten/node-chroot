@@ -31,11 +31,12 @@ Note: in order to change user the process must be started as a super-user.
 ## API
 
 ### chroot(newroot, user, [group])
-* newroot {String}  the path of the new root for this process
+* newroot {String}  the path of the new root for this process. the whole path
+      should be owned by root and may not be writable by the group or others
 * user {String|Number}  the user name or id to switch to after changing the root
-  path
+      path
 * group {String|Number}  the group name or id to switch to after changing the
-  root, defaults to the groups the user is in
+      root, defaults to the groups the user is in (using /etc/groups)
 
 Change the root of the current process. A non-superuser must be provided since
 changing root without dropping privileges makes no sense from a security point
@@ -43,15 +44,15 @@ of view.
 
 ## Notes
 * open file descriptors are not closed and environment variables are not cleared
-  (except for PWD)
+* if the environment variable PWD is set, it will be reset to "/"
 * If using `fork` beware that Node < 0.11 does not close file descriptors in the
   child. See https://github.com/joyent/node/issues/6905 and
   https://medium.com/@fun_cuddles/opening-files-in-node-js-considered-harmful-d7de566d499f
 
 ## Todo
-* check `newroot` for ownership and access rights up to the original root
 * examine other environmental leaks like argv and open file descriptors
-* consider the implicit use of child_process
+* consider the implicit use of child_process and other privilege separation
+  techniques
 
 ## License
 

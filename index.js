@@ -16,6 +16,9 @@
 
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
+
 var posix = require('posix');
 
 /**
@@ -23,11 +26,13 @@ var posix = require('posix');
  * changing root without dropping privileges makes no sense from a security point
  * of view.
  *
- * @param {String} newroot  the path of the new root for this process
+ * @param {String} newroot  the path of the new root for this process. the whole
+ *        path should be owned by root and may not be writable by the group or
+ *        others
  * @param {String|Number} user  the user name or id to switch to after changing the
- *                              root path
+ *        root path
  * @param {String|Number} [group]  the group name or id to switch to after changing
- *                                 the root, defaults to the groups the user is in
+ *        the root, defaults to the groups the user is in (using /etc/groups)
  * @throws if any operation fails
  */
 module.exports = function chroot(newroot, user, group) {
@@ -55,6 +60,18 @@ module.exports = function chroot(newroot, user, group) {
   } catch(err) {
     throw new Error('user not found: ' + user);
   }
+
+  // check permissions up to the original root of the file system
+  var rpath = fs.realpathSync(newroot);
+
+  var stats;
+  do {
+    stats = fs.statSync(rpath);
+    if (stats.uid !== 0 || (stats.mode & 18) !== 0) {
+      throw new Error('bad chroot dir ' + rpath + ' owner: ' + stats.uid + ' or permissions: 0' + stats.mode.toString(8));
+    }
+    rpath = path.dirname(rpath);
+  } while (rpath !== '/');
 
   try {
     if (typeof group === 'undefined') {
