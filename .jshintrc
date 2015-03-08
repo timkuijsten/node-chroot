@@ -1,0 +1,45 @@
+{
+  // Enforcing Options
+  ////"bitwise"       : true,
+  ////"camelcase"     : true,
+  "curly"         : true,
+  "eqeqeq"        : true,
+  "forin"         : true,
+  "immed"         : true,
+  "indent"        : 2,
+  "latedef"       : true,
+  "newcap"        : true,
+  "noarg"         : true,
+  "noempty"       : true,
+  ////"nonew"         : true,
+  ////"plusplus"      : true,
+  "quotmark"      : true,
+  "regexp"        : true,
+  "undef"         : true,
+  "unused"        : true,
+  "strict"        : false,
+  "trailing"      : true,
+  "maxparams"     : 6,
+  "maxdepth"      : 3,
+  "maxstatements" : 60,
+  //"maxcomplexity" : 10,
+
+  // Relaxing Options
+  //boss              : true,
+  //eqnull            : true,
+
+  // Environments
+  "node"   : true,
+
+  "predef" : [
+    "jasmine",
+    "before",
+    "after",
+    "describe",
+    "xdescribe",
+    "it",
+    "xit",
+    "expect",
+    "waitsFor"
+  ]
+}
