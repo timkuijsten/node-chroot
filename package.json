@@ -16,7 +16,7 @@
   "main": "index.js",
   "bugs": "https://github.com/timkuijsten/node-chroot/issues",
   "dependencies": {
-    "posix": "1.0.x"
+    "posix": ">=1.0.x <=2.0.x"
   },
   "repository": {
     "type": "git",
