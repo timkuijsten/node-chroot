@@ -35,7 +35,7 @@ process.env.PWD = '/var/empty';
 assert.throws(function() { chroot(); }, /newroot must be a string/);
 assert.throws(function() { chroot('foo'); }, /user must be a string or a number/);
 assert.throws(function() { chroot('foo', 'user'); }, /user not found: user/);
-assert.throws(function() { chroot('foo', 'nobody'); }, /ENOENT, no such file or directory/);
+assert.throws(function() { chroot('foo', 'nobody'); }, /ENOENT: no such file or directory/);
 
 // create a root owned directory that is not writable for the group or others, but
 // has ancestors that fail this criteria (/tmp)
