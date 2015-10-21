@@ -22,27 +22,28 @@ var path = require('path');
 var posix = require('posix');
 
 /**
- * Change the root of the current process. A non-superuser must be provided since
- * changing root without dropping privileges makes no sense from a security point
- * of view.
+ * Change the root directory of the current process. A normal user must be provided
+ * since changing root without dropping privileges makes no sense from a security
+ * point of view.
  *
- * @param {String} newroot  the path of the new root for this process. the whole
- *        path should be owned by root and may not be writable by the group or
- *        others
- * @param {String|Number} user  the user name or id to switch to after changing the
- *        root path
- * @param {String|Number} [group]  the group name or id to switch to after changing
- *        the root, defaults to the groups the user is in (using /etc/groups)
- * @throws if any operation fails
+ * @param {String} newRoot  The path to the new root directory for this process.
+ *        The whole path should be owned by the super user and may not be writable
+ *        by the group owner or others.
+ * @param {String|Number} user  The user to switch to after changing the root
+ *        directory. Can be either a name or an id.
+ * @param {String|Number} [group]  The group to switch to after changing the root
+ *        directory. Can be either a name or an id of any group the user belongs to
+ *        (see /etc/groups). Defaults to the users primary group (see /etc/passwd).
+ * @throw if any operation fails
  */
-module.exports = function chroot(newroot, user, group) {
-  if (typeof newroot !== 'string') { throw new TypeError('newroot must be a string'); }
+module.exports = function chroot(newRoot, user, group) {
+  if (typeof newRoot !== 'string') { throw new TypeError('newRoot must be a string'); }
   if (typeof user !== 'string' && typeof user !== 'number') { throw new TypeError('user must be a string or a number'); }
   if (typeof group !== 'undefined') {
     if (typeof group !== 'string' && typeof group !== 'number') { throw new TypeError('group must be a string or a number'); }
   }
 
-  if (newroot.length < 1) { throw new Error('newroot must contain at least one character'); }
+  if (newRoot.length < 1) { throw new Error('newRoot must contain at least one character'); }
   if (typeof user === 'string' && user.length < 1) { throw new Error('user must contain at least one character'); }
 
   if (user === 'root' || user === 0) { throw new Error('new user can not be root or 0'); }
@@ -62,7 +63,7 @@ module.exports = function chroot(newroot, user, group) {
   }
 
   // check permissions up to the original root of the file system
-  var rpath = fs.realpathSync(newroot);
+  var rpath = fs.realpathSync(newRoot);
 
   var stats;
   do {
@@ -74,7 +75,7 @@ module.exports = function chroot(newroot, user, group) {
   } while (rpath !== '/');
 
   try {
-    posix.chroot(newroot);
+    posix.chroot(newRoot);
   } catch(err) {
     throw new Error('changing root failed: ' + err.message);
   }

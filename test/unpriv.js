@@ -22,14 +22,14 @@ var assert = require('assert');
 var chroot = require('../index');
 
 if (process.getuid() === 0) {
-  console.error("don't run these unprivileged tests as user root");
+  console.error('don\'t run these unprivileged tests as user root');
   process.exit(1);
 }
 
-assert.throws(function() { chroot({}); }, /newroot must be a string/);
+assert.throws(function() { chroot({}); }, /newRoot must be a string/);
 assert.throws(function() { chroot('foo'); }, /user must be a string or a number/);
 assert.throws(function() { chroot('foo', 'bar', {}); }, /group must be a string or a number/);
-assert.throws(function() { chroot('', 'bar'); }, /newroot must contain at least one character/);
+assert.throws(function() { chroot('', 'bar'); }, /newRoot must contain at least one character/);
 assert.throws(function() { chroot('foo', ''); }, /user must contain at least one character/);
 assert.throws(function() { chroot('foo', 'root'); }, /user can not be root or 0/);
 assert.throws(function() { chroot('foo', 0); }, /user can not be root or 0/);

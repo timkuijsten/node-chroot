@@ -1,6 +1,6 @@
 # chroot
 
-Safely chroot the current process and drop privileges.
+Securely chroot the current process and drop privileges.
 
 ## Example
 
@@ -22,7 +22,7 @@ Bind a TCP server to a privileged port before dropping privileges.
       }
     });
 
-Note: in order to change user the process must be started as the super user.
+Note: the process must be started as the super user.
 
 ## Installation
 
@@ -30,23 +30,37 @@ Note: in order to change user the process must be started as the super user.
 
 ## API
 
-### chroot(newroot, user, [group])
-* newroot {String}  the path of the new root for this process. the whole path
-      should be owned by root and may not be writable by the group or others
-* user {String|Number}  the user name or id to switch to after changing the root
-      path
-* group {String|Number}  the group name or id to switch to after changing the
-      root, defaults to the groups the user is in (using /etc/groups)
+### chroot(newRoot, user, [group])
+* newRoot {String} The path to the new root directory for this process. The
+       whole path should be owned by the super user and may not be writable by
+       the group owner or others.
+* user {String|Number} The user to switch to after changing the root directory.
+       Can be either a name or an id.
+* group {String|Number} The group to switch to after changing the root
+       directory. Can be either a name or an id of any group the user belongs to
+       (see /etc/groups). Defaults to the users primary group (see /etc/passwd).
 
-Change the root of the current process. A normal user must be provided since
-changing root without dropping privileges makes no sense from a security point
-of view.
+Change the root directory of the current process. A normal user must be provided
+since changing root without dropping privileges makes no sense from a security
+point of view.
 
 ## Notes
-* the current working dir is set to "/" in the new chroot
-* if the environment variable PWD is set, it will be reset to "/"
-* open file descriptors are not closed and environment variables and argv are
+* The current working dir is updated to "/".
+* If the environment variable PWD is set, it will be updated to "/".
+* Open file descriptors are not closed and environment variables and argv are
   not cleared, use `child_process.fork()` to accomplish that.
+
+## General chroot tips
+* Apply the principle of least privilege to anything that must reside in the
+  chroot and the user that privileges are dropped to.
+* Put as little as possible inside the chroot, so include modules before
+  chrooting.
+* Create a separate user account used only for running the chrooted process.
+* Try to avoid or minimize writable paths, or make it writable for the separate
+  user only.
+* Realize that any code in a chroot must be maintained.
+* Avoid hard links to any other path outside the chroot.
+* Don't store any setuid or setgid binaries inside the chroot.
 
 ## License
 
