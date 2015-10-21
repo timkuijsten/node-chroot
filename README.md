@@ -1,6 +1,6 @@
 # chroot
 
-Chroot the current process and drop privileges.
+Safely chroot the current process and drop privileges.
 
 ## Example
 
@@ -22,7 +22,7 @@ Bind a TCP server to a privileged port before dropping privileges.
       }
     });
 
-Note: in order to change user the process must be started as a super-user.
+Note: in order to change user the process must be started as the super user.
 
 ## Installation
 
@@ -38,21 +38,15 @@ Note: in order to change user the process must be started as a super-user.
 * group {String|Number}  the group name or id to switch to after changing the
       root, defaults to the groups the user is in (using /etc/groups)
 
-Change the root of the current process. A non-superuser must be provided since
+Change the root of the current process. A normal user must be provided since
 changing root without dropping privileges makes no sense from a security point
 of view.
 
 ## Notes
-* open file descriptors are not closed and environment variables are not cleared
+* the current working dir is set to "/" in the new chroot
 * if the environment variable PWD is set, it will be reset to "/"
-* If using `fork` beware that Node < 0.11 does not close file descriptors in the
-  child. See https://github.com/joyent/node/issues/6905 and
-  https://medium.com/@fun_cuddles/opening-files-in-node-js-considered-harmful-d7de566d499f
-
-## Todo
-* examine other environmental leaks like argv and open file descriptors
-* consider the implicit use of child_process and other privilege separation
-  techniques
+* open file descriptors are not closed and environment variables and argv are
+  not cleared, use `child_process.fork()` to accomplish that.
 
 ## License
 
