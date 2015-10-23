@@ -1,6 +1,6 @@
 # chroot
 
-Securely chroot the current process and drop privileges.
+Safely chroot the current process and drop privileges.
 
 ## Example
 
@@ -51,16 +51,15 @@ point of view.
   not cleared, use `child_process.fork()` to accomplish that.
 
 ## General chroot tips
-* Apply the principle of least privilege to anything that must reside in the
-  chroot and the user that privileges are dropped to.
-* Put as little as possible inside the chroot, so include modules before
-  chrooting.
+Chrooting a program is not a security solution. It is only one aspect of the
+much broader principle of least privilege. When done right it can be used as a
+mitigation to seriously hinder a compromised process in further compromising the
+system. Keep the following things in mind when setting up and using a chroot:
+* Anything that is stored in the chroot can be used against you. Use an empty
+  non-writable directory if possible.
+* Include modules before chrooting.
 * Create a separate user account used only for running the chrooted process.
-* Try to avoid or minimize writable paths, or make it writable for the separate
-  user only.
-* Realize that any code in a chroot must be maintained.
-* Avoid hard links to any other path outside the chroot.
-* Don't store any setuid or setgid binaries inside the chroot.
+* Use child_process.fork() to clear the environment and close file descriptors.
 
 ## License
 

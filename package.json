@@ -8,7 +8,7 @@
   },
   "contributors": ["mozbugbox"],
   "license": "ISC",
-  "description": "Securely chroot the current process and drop privileges",
+  "description": "Safely chroot the current process and drop privileges",
   "keywords": [
     "chroot",
     "jail"
