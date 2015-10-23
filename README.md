@@ -63,8 +63,8 @@ system. Keep the following things in mind when setting up and using a chroot:
 * Use child_process.fork() to clear the environment and close file descriptors.
 
 Further reading:
-* http://www.unixwiz.net/techtips/chroot-practices.html
-* http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/minimize-privileges.html
+* [http://www.unixwiz.net/techtips/chroot-practices.html](http://www.unixwiz.net/techtips/chroot-practices.html)
+* [http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/minimize-privileges.html](http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/minimize-privileges.html)
 
 ## License
 
