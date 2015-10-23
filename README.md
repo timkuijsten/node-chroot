@@ -4,7 +4,7 @@ Safely chroot the current process and drop privileges.
 
 ## Example
 
-Bind a TCP server to a privileged port before dropping privileges.
+Bind a TCP server to a privileged port, chroot and drop privileges to "wwwuser".
 
     var net = require('net');
     var chroot = require('chroot');
@@ -14,8 +14,8 @@ Bind a TCP server to a privileged port before dropping privileges.
       if (err) { throw err; }
 
       try {
-        chroot('/var/empty', 'nobody');
-        console.log('changed root to "/var/empty" and user to "nobody"');
+        chroot('/var/empty', 'wwwuser');
+        console.log('changed root to "/var/empty" and user to "wwwuser"');
       } catch(err) {
         console.error('changing root or user failed', err);
         process.exit(1);
@@ -50,16 +50,21 @@ point of view.
 * Open file descriptors are not closed and environment variables and argv are
   not cleared, use `child_process.fork()` to accomplish that.
 
-## General chroot tips
+## General chroot notes
 Chrooting a program is not a security solution. It is only one aspect of the
 much broader principle of least privilege. When done right it can be used as a
 mitigation to seriously hinder a compromised process in further compromising the
 system. Keep the following things in mind when setting up and using a chroot:
+
 * Anything that is stored in the chroot can be used against you. Use an empty
   non-writable directory if possible.
 * Include modules before chrooting.
 * Create a separate user account used only for running the chrooted process.
 * Use child_process.fork() to clear the environment and close file descriptors.
+
+Further reading:
+* http://www.unixwiz.net/techtips/chroot-practices.html
+* http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/minimize-privileges.html
 
 ## License
 
