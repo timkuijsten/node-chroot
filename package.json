@@ -1,12 +1,12 @@
 {
   "name": "chroot",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": {
     "name": "Tim Kuijsten",
     "email": "tim@netsend.nl",
     "url": "https://github.com/timkuijsten"
   },
-  "contributors": ["mozbugbox"],
+  "contributors": ["mozbugbox", "alessioalex"],
   "license": "ISC",
   "description": "Safely chroot the current process and drop privileges",
   "keywords": [
