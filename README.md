@@ -6,21 +6,23 @@ Safely chroot the current process and drop privileges.
 
 Bind a TCP server to a privileged port, chroot and drop privileges to "wwwuser".
 
-    var net = require('net');
-    var chroot = require('chroot');
+```js
+var net = require('net');
+var chroot = require('chroot');
 
-    var server = net.createServer();
-    server.listen(80, function(err) {
-      if (err) { throw err; }
+var server = net.createServer();
+server.listen(80, function(err) {
+  if (err) { throw err; }
 
-      try {
-        chroot('/var/empty', 'wwwuser');
-        console.log('changed root to "/var/empty" and user to "wwwuser"');
-      } catch(err) {
-        console.error('changing root or user failed', err);
-        process.exit(1);
-      }
-    });
+  try {
+    chroot('/var/empty', 'wwwuser');
+    console.log('changed root to "/var/empty" and user to "wwwuser"');
+  } catch(err) {
+    console.error('changing root or user failed', err);
+    process.exit(1);
+  }
+});
+```
 
 Note: the process must be started as the super user.
 
