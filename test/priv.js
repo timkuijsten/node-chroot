@@ -31,7 +31,6 @@ if (process.getuid() !== 0) {
 // ensure pwd
 process.env.PWD = '/var/empty';
 
-// TODO: test with group argument
 assert.throws(function() { chroot(); }, /newRoot must be a string/);
 assert.throws(function() { chroot('foo'); }, /user must be a string or a number/);
 assert.throws(function() { chroot('foo', 'user'); }, /user not found: user/);
