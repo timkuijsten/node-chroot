@@ -88,7 +88,7 @@ module.exports = function chroot(newRoot, user, group) {
 
   try {
     if (typeof group === 'undefined') {
-      process.initgroups(pwd.uid, pwd.gid);
+      process.initgroups(user, pwd.gid);
     } else {
       process.setgroups([group]);
     }
