@@ -1,3 +1,8 @@
+2017.07.23, Version 1.0.10
+
+* fix initgroups issue on linux
+
+
 2015.11.18, Version 1.0.9
 
 * Enable syntax highlighting for README example (alessioalex @github)
