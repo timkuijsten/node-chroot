@@ -85,7 +85,7 @@ module.exports = function chroot(newRoot, user, group) {
   if (!(gid > 0)) { throw new Error('new group can not have group id 0'); }
 
   // check permissions up to the original root of the file system
-  var rpath = fs.realpathSync(newRoot);
+  var rpath = newRoot = fs.realpathSync(newRoot);
 
   var stats;
   do {
