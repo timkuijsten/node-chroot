@@ -37,10 +37,11 @@ Note: the process must be started as the super user.
        whole path should be owned by the super user and may not be writable by
        the group owner or others.
 * user {String|Number} The user to switch to after changing the root directory.
-       Can be either a name or an id.
+       Can be either a name or a numeric id.
 * group {String|Number} The group to switch to after changing the root
-       directory. Can be either a name or an id of any group the user belongs to
-       (see /etc/groups). Defaults to the users primary group (see /etc/passwd).
+       directory. Can be either a name or a numeric id. If omitted the default
+       is to set all the groups the user is a member of (see /etc/groups) plus
+       the primary group of the user (see /etc/passwd).
 
 Change the root directory of the current process. A normal user must be provided
 since changing root without dropping privileges makes no sense from a security
@@ -72,7 +73,7 @@ Further reading:
 
 ISC
 
-Copyright (c) 2014, 2015 Tim Kuijsten
+Copyright (c) 2014, 2015, 2021 Tim Kuijsten
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
