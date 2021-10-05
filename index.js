@@ -90,7 +90,7 @@ module.exports = function chroot(newRoot, user, group) {
   var stats;
   do {
     stats = fs.statSync(rpath);
-    if (stats.uid !== 0 || (stats.mode & 18) !== 0) {
+    if (stats.uid !== 0 || (stats.mode & (fs.constants.S_IWGRP | fs.constants.S_IWOTH)) !== 0) {
       throw new Error('bad chroot dir ' + rpath + ' owner: ' + stats.uid + ' or permissions: 0' + stats.mode.toString(8));
     }
     rpath = path.dirname(rpath);
