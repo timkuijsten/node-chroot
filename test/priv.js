@@ -35,6 +35,10 @@ assert.throws(function() { chroot(); }, /newRoot must be a string/);
 assert.throws(function() { chroot('foo'); }, /user must be a string or a number/);
 assert.throws(function() { chroot('foo', 'user'); }, /user not found: user/);
 assert.throws(function() { chroot('foo', 'nobody'); }, /ENOENT: no such file or directory/);
+assert.throws(function() { chroot('foo', 'root'); }, /new user can not have user id 0/);
+assert.throws(function() { chroot('foo', 0); }, /new user can not have user id 0/);
+assert.throws(function() { chroot('foo', 'nobody', 'root'); }, /new group can not have group id 0/);
+assert.throws(function() { chroot('foo', 'nobody', 0); }, /new group can not have group id 0/);
 
 // create a root owned directory that is not writable for the group or others, but
 // has ancestors that fail this criteria (/tmp)

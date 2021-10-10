@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014, 2015 Tim Kuijsten
+ * Copyright (c) 2014, 2015, 2021 Tim Kuijsten
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -46,21 +46,43 @@ module.exports = function chroot(newRoot, user, group) {
   if (!(newRoot.length > 0)) { throw new Error('newRoot must contain at least one character'); }
   if (typeof user === 'string' && !(user.length > 0)) { throw new Error('user must contain at least one character'); }
 
-  if (user === 'root' || user === 0) { throw new Error('new user can not be root or 0'); }
-  if (typeof group !== 'undefined') {
-    if (group === 'root' || group === 0) { throw new Error('new group can not be root or 0'); }
-  }
-
   if (process.getuid() !== 0 || posix.geteuid() !== 0) {
     throw new Error('chroot must be called while running as root');
   }
 
-  var pwd;
+  var pwd, grp, uid, gid;
+
+  // resolve user to a numeric id
   try {
     pwd = posix.getpwnam(user);
   } catch(err) {
     throw new Error('user not found: ' + user);
   }
+
+  uid = pwd.uid;
+  gid = pwd.gid;
+
+  if (typeof group !== 'undefined') {
+    if (typeof group === 'number') {
+      gid = group;
+    } else {
+      // resolve group to a numeric id
+      try {
+        grp = posix.getgrnam(group);
+      } catch(err) {
+        throw new Error('group not found: ' + group);
+      }
+
+      gid = grp.gid;
+    }
+  }
+
+
+  if (typeof uid !== 'number') { throw new TypeError('could not resolve the user to a number'); }
+  if (typeof gid !== 'number') { throw new TypeError('could not resolve the group to a number'); }
+
+  if (!(uid > 0)) { throw new Error('new user can not have user id 0'); }
+  if (!(gid > 0)) { throw new Error('new group can not have group id 0'); }
 
   // check permissions up to the original root of the file system
   var rpath = fs.realpathSync(newRoot);
@@ -88,16 +110,18 @@ module.exports = function chroot(newRoot, user, group) {
 
   try {
     if (typeof group === 'undefined') {
-      process.initgroups(user, pwd.gid);
+      // change to the given user and all the groups that it is a member of
+      process.initgroups(uid, gid);
     } else {
-      process.setgroups([group]);
+      // change to the given user and the given group (not all groups the user is member of)
+      process.setgroups([gid]);
     }
   } catch(err) {
     throw new Error('changing groups failed: ' + err.message);
   }
 
-  process.setgid(group || pwd.gid);
-  process.setuid(pwd.uid);
+  process.setgid(gid);
+  process.setuid(uid);
 
   // try to restore privileges
   try {
