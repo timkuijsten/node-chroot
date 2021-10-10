@@ -43,8 +43,8 @@ module.exports = function chroot(newRoot, user, group) {
     if (typeof group !== 'string' && typeof group !== 'number') { throw new TypeError('group must be a string or a number'); }
   }
 
-  if (newRoot.length < 1) { throw new Error('newRoot must contain at least one character'); }
-  if (typeof user === 'string' && user.length < 1) { throw new Error('user must contain at least one character'); }
+  if (!(newRoot.length > 0)) { throw new Error('newRoot must contain at least one character'); }
+  if (typeof user === 'string' && !(user.length > 0)) { throw new Error('user must contain at least one character'); }
 
   if (user === 'root' || user === 0) { throw new Error('new user can not be root or 0'); }
   if (typeof group !== 'undefined') {
