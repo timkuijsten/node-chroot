@@ -96,6 +96,19 @@ module.exports = function chroot(newRoot, user, group) {
     rpath = path.dirname(rpath);
   } while (rpath !== '/');
 
+  // set supplementary groups before chrooting
+  try {
+    if (typeof group === 'undefined') {
+      // change to the given user and all the groups that it is a member of
+      process.initgroups(uid, gid);
+    } else {
+      // change to the given user and the given group
+      process.setgroups([gid]);
+    }
+  } catch(err) {
+    throw new Error('changing groups failed: ' + err.message);
+  }
+
   try {
     posix.chroot(newRoot);
   } catch(err) {
@@ -106,18 +119,6 @@ module.exports = function chroot(newRoot, user, group) {
   // PWD might be set in some environments and is part of POSIX
   if (typeof process.env.PWD !== 'undefined') {
     process.env.PWD = '/';
-  }
-
-  try {
-    if (typeof group === 'undefined') {
-      // change to the given user and all the groups that it is a member of
-      process.initgroups(uid, gid);
-    } else {
-      // change to the given user and the given group (not all groups the user is member of)
-      process.setgroups([gid]);
-    }
-  } catch(err) {
-    throw new Error('changing groups failed: ' + err.message);
   }
 
   process.setgid(gid);
